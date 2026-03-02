@@ -1,65 +1,41 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MyAcademy_JWT.Entities;
-using MyAcademy_JWT.Services;
+﻿
+using MyAcademy_JWT.Services.AuthServices;
 
-namespace MyAcademy_JWT.Endpoints
+namespace MyAcademy_JWT.Endpoints;
+
+public static class AuthEndpoints
 {
-    public static class AuthEndpoints
+    public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
+        app.MapPost("/api/register", async (RegisterRequest req, IAuthService authService) =>
         {
-            app.MapPost("/api/register", async (RegisterRequest req, UserManager<AppUser> userManager) =>
+            var (ok, error) = await authService.RegisterAsync(req.Email, req.Password, req.DisplayName, req.PackageId);
+            return ok ? Results.Ok("Registered.") : Results.BadRequest(error);
+        });
+
+        app.MapPost("/api/login", async (LoginRequest req, IAuthService authService, HttpContext http) =>
+        {
+            var (ok, token, expiresUtc) = await authService.LoginAsync(req.Email, req.Password);
+            if (!ok || token == null || expiresUtc == null) return Results.Unauthorized();
+
+            http.Response.Cookies.Append("jwt", token, new CookieOptions
             {
-                var exists = await userManager.FindByEmailAsync(req.Email);
-                if (exists != null) return Results.BadRequest("User already exists.");
-
-                var user = new AppUser
-                {
-                    UserName = req.Email,
-                    Email = req.Email,
-                    DisplayName = req.DisplayName,
-                    PackageId = req.PackageId
-                };
-
-                var result = await userManager.CreateAsync(user, req.Password);
-                if (!result.Succeeded) return Results.BadRequest(result.Errors);
-
-                return Results.Ok("Registered.");
+                HttpOnly = true,
+                Secure = true,               // localde https ile çalıştır
+                SameSite = SameSiteMode.Lax,
+                Expires = expiresUtc.Value
             });
 
-            app.MapPost("/api/login", async (LoginRequest req,
-                UserManager<AppUser> userManager,
-                SignInManager<AppUser> signInManager,
-                TokenService tokenService,
-                HttpContext http) =>
-            {
-                var user = await userManager.FindByEmailAsync(req.Email);
-                if (user == null) return Results.Unauthorized();
+            return Results.Ok(new { expiresUtc });
+        });
 
-                var check = await signInManager.CheckPasswordSignInAsync(user, req.Password, false);
-                if (!check.Succeeded) return Results.Unauthorized();
-
-                var (token, expires) = tokenService.CreateToken(user);
-
-                http.Response.Cookies.Append("jwt", token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Lax,
-                    Expires = expires
-                });
-
-                return Results.Ok(new { expiresUtc = expires });
-            });
-
-            app.MapPost("/api/logout", (HttpContext http) =>
-            {
-                http.Response.Cookies.Delete("jwt");
-                return Results.Ok();
-            });
-        }
-
-        public record RegisterRequest(string Email, string Password, string DisplayName, int PackageId);
-        public record LoginRequest(string Email, string Password);
+        app.MapPost("/api/logout", (HttpContext http) =>
+        {
+            http.Response.Cookies.Delete("jwt");
+            return Results.Ok();
+        });
     }
+
+    public record RegisterRequest(string Email, string Password, string DisplayName, int PackageId);
+    public record LoginRequest(string Email, string Password);
 }

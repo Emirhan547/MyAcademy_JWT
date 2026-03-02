@@ -4,12 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyAcademy_JWT.Data.Context;
 using MyAcademy_JWT.Data.Repositories;
+using MyAcademy_JWT.Data.Repositories.PackageRepositories;
 using MyAcademy_JWT.Data.Repositories.SongRepositories;
 using MyAcademy_JWT.Data.Repositories.UserRepositories;
+using MyAcademy_JWT.Data.Repositories.UserSongHistoryRepositories;
 using MyAcademy_JWT.Endpoints;
 using MyAcademy_JWT.Entities;
 using MyAcademy_JWT.Options;
 using MyAcademy_JWT.Services;
+using MyAcademy_JWT.Services.AuthServices;
+using MyAcademy_JWT.Services.HistoryServices;
+using MyAcademy_JWT.Services.PackageServices;
+using MyAcademy_JWT.Services.PlayServices;
+using MyAcademy_JWT.Services.RecommendationServices;
+using MyAcademy_JWT.Services.SongQueryServices;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,8 +25,21 @@ builder.Services.AddScoped(typeof(IGenericRepository<>),
                           typeof(GenericRepository<>));
 
 builder.Services.AddScoped<ISongRepository,SongRepository>();
-
+builder.Services.AddScoped<IPackageAccessService, PackageAccessService>();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+// repositories
+
+
+builder.Services.AddScoped<IPackageRepository,PackageRepository>();
+builder.Services.AddScoped<IUserSongHistoryRepository,UserSongHistoryRepository>();
+
+// services
+builder.Services.AddScoped<IHistoryService, HistoryService>();
+
+builder.Services.AddScoped<IAuthService,AuthService>();
+builder.Services.AddScoped<IPlayerService,PlayerService>();
+builder.Services.AddScoped<ISongQueryService,SongQueryService>();
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Sql")));
 
@@ -87,5 +108,8 @@ app.MapControllerRoute(
     .WithStaticAssets();
 app.MapAuthEndpoints();
 app.MapPingEndpoints(); // varsa kalsın
-
+app.MapSongEndpoints();
+app.MapPlayerEndpoints();
+app.MapHistoryEndpoints();
+app.MapRecommendationEndpoints();
 app.Run();

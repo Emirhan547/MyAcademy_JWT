@@ -1,4 +1,5 @@
-﻿using MyAcademy_JWT.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using MyAcademy_JWT.Data.Context;
 using MyAcademy_JWT.Entities;
 
 namespace MyAcademy_JWT.Data.Repositories.UserRepositories
