@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+@await Component.InvokeAsync("_UILayoutHead")
+
+<body class="layout-column bg-dark">
+	@await Component.InvokeAsync("_UILayoutNavbar")
+	<div id="main" class="layout-row flex">
+		<!-- ############ Content START-->
+	@RenderBody()
+		<!-- ############ Content END-->
+	</div>
+	@await Component.InvokeAsync("_UILayoutFooter")
+
+
+	<!-- build:js assets/js/site.min.js -->
+	<!-- jQuery -->
+	@await Component.InvokeAsync("_UILayoutScript")
+	<!-- endbuild -->
+</body>
+</html>

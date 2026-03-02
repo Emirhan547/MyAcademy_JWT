@@ -19,7 +19,7 @@ namespace MyAcademy_JWT.Data.Repositories.UserSongHistoryRepositories
         }
         public async Task<List<(string UserId, int SongId)>> GetAllInteractionsAsync(int takeLast = 50000)
         {
-,
+
             var rows = await _context.UserSongHistories
                 .AsNoTracking()
                 .OrderByDescending(x => x.PlayedAtUtc)
