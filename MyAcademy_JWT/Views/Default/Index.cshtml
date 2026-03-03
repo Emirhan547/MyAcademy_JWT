@@ -1,168 +1,82 @@
-﻿
+﻿@model HomeViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UILayout.cshtml";
 }
 
-<div id="content" class="flex ">
-	<!-- ############ Main START-->
+<div class="page-container p-5">
+	<div class="text-center mb-5">
+		<h1 class="display-4 font-weight-bold text-white">MyAcademy Music</h1>
+		<p class="text-muted">Canlı verilerle müzik platformunu keşfet.</p>
+		<a asp-controller="Default" asp-action="Discover" class="btn btn-md gd-primary text-white m-2">Discover</a>
+	</div>
 
-	<div class="sr">
-		<div class="page-hero page-container">
-			<div class="media bg-media">
-				<div class="media-content" style="background-image:url(assets/img/b2.jpg)"></div>
-			</div>
-			<div class="p-5 pos-rlt text-center">
-				<h1 class="display-3 font-weight-bold text-white mb-5 mx-5">Music template for artists, audio platform.</h1>
-				<a href="html/discover.html" class="btn btn-md gd-primary text-white no-ajax m-2">Discover new Music</a>
-
-				<a href="https://themeforest.net/user/flatfull/portfolio" class="btn btn-md btn-outline-light m-2">Purchase</a>
-			</div>
-		</div>
-		<div class="page-container p-5 pos-rlt">
-			<div class="py-5 text-center">
-				<h2 class="display-4 font-weight-bold text-white mb-5">Artists on Bepop</h2>
-				<p>Find the most popular artists and listen their music on Bepop, Create your own playlist when listening to them.</p>
-				<div class="py-4">
-					<a href="html/artists.html" class="btn btn-md btn-outline-primary no-ajax m-2">Explore artists</a>
-
-					<a href="https://themeforest.net/user/flatfull/portfolio" class="btn btn-md btn-outline-primary m-2">Purchase</a>
+	<div class="row mb-4">
+		<div class="col-md-4 mb-3">
+			<div class="card bg-dark text-white border-0 shadow h-100">
+				<div class="card-body text-center">
+					<h6 class="text-muted">Toplam Şarkı</h6>
+					<h2>@Model.TotalSongCount</h2>
 				</div>
 			</div>
 		</div>
-
-		<div class="row no-gutters flex align-items-end">
-			<div class="col-2">
-				<div class="row no-gutters align-items-end">
-					<div class="col-2">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b0.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-10"></div>
-					<div class="col-8">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b1.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-4">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b2.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b3.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b4.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-12">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b5.jpg);"></a>
-						</div>
-					</div>
+		<div class="col-md-4 mb-3">
+			<div class="card bg-dark text-white border-0 shadow h-100">
+				<div class="card-body text-center">
+					<h6 class="text-muted">Toplam Sanatçı</h6>
+					<h2>@Model.TotalArtistCount</h2>
 				</div>
 			</div>
-			<div class="col-3">
-				<div class="row no-gutters align-items-end">
-					<div class="col-3">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b6.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-2">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b7.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-7"></div>
-					<div class="col-12">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b8.jpg);"></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-3">
-				<div class="row no-gutters align-items-end">
-					<div class="col-7">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b9.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-5">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b10.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b11.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b12.jpg);"></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-2">
-				<div class="row no-gutters align-items-end">
-					<div class="col-5">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b13.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-7">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b14.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-12">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b15.jpg);"></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-2">
-				<div class="row no-gutters align-items-end">
-					<div class="col-2"></div>
-					<div class="col-4">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b18.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b17.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-12">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b20.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b17.jpg);"></a>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="media">
-							<a class="media-content" style="background-image: url(assets/img/b19.jpg);"></a>
-						</div>
-					</div>
+		</div>
+		<div class="col-md-4 mb-3">
+			<div class="card bg-dark text-white border-0 shadow h-100">
+				<div class="card-body text-center">
+					<h6 class="text-muted">Toplam Dinlenme</h6>
+					<h2>@Model.TotalPlayCount</h2>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- ############ Main END-->
+	<div class="row">
+		<div class="col-lg-8 mb-4">
+			<h3 class="text-white mb-3">🔥 Trend Şarkılar</h3>
+			<div class="row">
+				@foreach (var song in Model.TrendingSongs)
+				{
+					<div class="col-md-6 mb-3">
+						<div class="card bg-dark text-white border-0 shadow h-100">
+							<img src="@(song.CoverImageUrl ?? "/Bepop/assets/img/default.jpg")"
+								 class="card-img-top"
+								 style="height:170px; object-fit:cover;" />
+							<div class="card-body">
+								<h6 class="mb-1">@song.Title</h6>
+								<small class="text-muted d-block">@song.ArtistName</small>
+								<small class="text-warning">🔥 @song.PlayCount plays</small>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+
+		<div class="col-lg-4 mb-4">
+			<h3 class="text-white mb-3">🎤 Popüler Sanatçılar</h3>
+			<div class="card bg-dark text-white border-0 shadow">
+				<ul class="list-group list-group-flush">
+					@foreach (var artist in Model.PopularArtists)
+					{
+						<li class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center border-secondary">
+							<div>
+								<div class="font-weight-bold">@artist.Name</div>
+								<small class="text-muted">@artist.SongCount şarkı</small>
+							</div>
+							<span class="badge badge-warning">@artist.TotalPlayCount</span>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
 

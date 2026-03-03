@@ -48,7 +48,7 @@ namespace MyAcademy_JWT.Controllers
             user.PackageId = selectedPackage.Id;
             await _userManager.UpdateAsync(user);
 
-            return RedirectToAction("Discover", "Home");
+            return RedirectToAction("Discover", "Default");
         }
     }
 }

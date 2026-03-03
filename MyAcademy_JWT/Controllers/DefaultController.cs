@@ -19,11 +19,42 @@ namespace MyAcademy_JWT.Controllers
             _songRepo = songRepo;
             _recommendationService = recommendationService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            var songs = await _songRepo.GetAllWithArtistAsync();
 
+            var model = new HomeViewModel
+            {
+                TotalSongCount = songs.Count,
+                TotalArtistCount = songs.Select(x => x.ArtistId).Distinct().Count(),
+                TotalPlayCount = songs.Sum(x => x.PlayCount),
+                TrendingSongs = songs
+                    .OrderByDescending(x => x.PlayCount)
+                    .Take(4)
+                    .Select(x => new HomeSongViewModel
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        ArtistName = x.Artist?.Name ?? "Unknown",
+                        CoverImageUrl = x.Album?.CoverImageUrl,
+                        PlayCount = x.PlayCount
+                    })
+                    .ToList(),
+                PopularArtists = songs
+                    .GroupBy(x => x.Artist?.Name ?? "Unknown")
+                    .Select(g => new HomeArtistViewModel
+                    {
+                        Name = g.Key,
+                        SongCount = g.Count(),
+                        TotalPlayCount = g.Sum(s => s.PlayCount)
+                    })
+                    .OrderByDescending(x => x.TotalPlayCount)
+                    .Take(5)
+                    .ToList()
+            };
+
+            return View(model);
+        }
         [Authorize]
         public async Task<IActionResult> Discover()
         {

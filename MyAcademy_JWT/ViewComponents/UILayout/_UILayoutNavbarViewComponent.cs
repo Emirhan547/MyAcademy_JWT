@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyAcademy_JWT.Data.Context;
 using MyAcademy_JWT.Entities;
+using MyAcademy_JWT.Models;
 
 namespace MyAcademy_JWT.ViewComponents.UILayout
 {
@@ -11,7 +12,9 @@ namespace MyAcademy_JWT.ViewComponents.UILayout
         private readonly UserManager<AppUser> _userManager;
         private readonly AppDbContext _context;
 
-        public _UILayoutNavbarViewComponent(AppDbContext context, UserManager<AppUser> userManager)
+        public _UILayoutNavbarViewComponent(
+            AppDbContext context,
+            UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -30,11 +33,13 @@ namespace MyAcademy_JWT.ViewComponents.UILayout
             var package = await _context.Packages
                 .FirstOrDefaultAsync(x => x.Id == user.PackageId);
 
-            return View(new
+            var model = new NavbarViewModel
             {
-                user.DisplayName,
+                DisplayName = user.DisplayName, // yoksa UserName kullan
                 PackageName = package?.Name ?? "Free"
-            });
+            };
+
+            return View(model);
         }
     }
 }
