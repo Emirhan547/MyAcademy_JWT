@@ -6,5 +6,6 @@ namespace MyAcademy_JWT.Data.Repositories.SongRepositories
     {
         Task<Song?> GetWithDetailsAsync(int id);
         Task<List<Song>> GetAvailableSongsAsync(int minLevel);
+        Task<List<Song>> GetAllWithArtistAsync();
     }
 }

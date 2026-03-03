@@ -13,7 +13,7 @@ namespace MyAcademy_JWT.Data.Repositories.UserSongHistoryRepositories
             return await _context.UserSongHistories
                 .AsNoTracking()
                 .Where(h => h.UserId == userId)
-                .OrderByDescending(h => h.PlayedAtUtc)
+                .OrderByDescending(h => h.PlayedAt)
                 .Take(take)
                 .ToListAsync();
         }
@@ -22,7 +22,7 @@ namespace MyAcademy_JWT.Data.Repositories.UserSongHistoryRepositories
 
             var rows = await _context.UserSongHistories
                 .AsNoTracking()
-                .OrderByDescending(x => x.PlayedAtUtc)
+                .OrderByDescending(x => x.PlayedAt)
                 .Take(takeLast)
                 .Select(x => new { x.UserId, x.SongId })
                 .ToListAsync();

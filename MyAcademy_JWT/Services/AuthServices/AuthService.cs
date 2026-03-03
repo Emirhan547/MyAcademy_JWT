@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyAcademy_JWT.Entities;
+using MyAcademy_JWT.Services.TokenServices;
 
 namespace MyAcademy_JWT.Services.AuthServices
 {
@@ -7,12 +8,12 @@ namespace MyAcademy_JWT.Services.AuthServices
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
         public AuthService(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            TokenService tokenService)
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;

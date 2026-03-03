@@ -1,0 +1,105 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<div class="layout-row bg-dark" style="min-height:100vh;">
+    <div class="d-flex flex-column flex w-100">
+        <div class="row no-gutters h-100">
+
+            <!-- LEFT IMAGE -->
+            <div class="col-md-6 bg-dark bg-img"
+                 style="background-image:url('@Url.Content("~/Bepop/assets/img/b7.jpg")');
+                        background-size:cover;
+                        background-position:center;">
+                <div class="p-4 p-md-5 d-flex flex-column h-100">
+                    <h4 class="mb-3 text-white">Bepop</h4>
+                    <div class="text-fade">Music Web Application</div>
+                    <div class="flex"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT REGISTER -->
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="p-4 p-md-5 w-100" style="max-width:450px; margin:auto;">
+
+                    <h5>Welcome to Bepop</h5>
+                    <p>
+                        <small class="text-muted">
+                            Create your account
+                        </small>
+                    </p>
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <form asp-action="Register" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            <label>Display Name</label>
+                            <input asp-for="DisplayName"
+                                   class="form-control"
+                                   placeholder="Your name" />
+                            <span asp-validation-for="DisplayName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="Enter email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input asp-for="Password"
+                                   class="form-control"
+                                   placeholder="Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input asp-for="ConfirmPassword"
+                                   class="form-control"
+                                   placeholder="Confirm Password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 text-sm">
+                            <span class="text-muted">
+                                By clicking Sign Up, I agree to the
+                            </span>
+                            <a href="#">Terms of service</a>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary btn-block mb-4">
+                            Sign Up
+                        </button>
+
+                        <div class="text-center">
+                            Already have an account?
+                            <a asp-controller="Account"
+                               asp-action="Login"
+                               class="text-primary">
+                                Sign in
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

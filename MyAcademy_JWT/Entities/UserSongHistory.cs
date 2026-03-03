@@ -10,6 +10,6 @@
         public int SongId { get; set; }
         public Song? Song { get; set; }
 
-        public DateTime PlayedAtUtc { get; set; }
+        public DateTime PlayedAt { get; set; }
     }
 }

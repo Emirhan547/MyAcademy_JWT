@@ -14,16 +14,28 @@ namespace MyAcademy_JWT.Data.Repositories
             _set = _context.Set<T>();
         }
 
-        public async Task<T?> GetByIdAsync(int id) => await _set.FindAsync(id);
+        public async Task<T?> GetByIdAsync(int id)
+            => await _set.FindAsync(id);
 
-        public async Task<List<T>> GetAllAsync() => await _set.ToListAsync();
+        public async Task<List<T>> GetAllAsync()
+            => await _set.ToListAsync();
 
-        public async Task AddAsync(T entity) => await _set.AddAsync(entity);
+        public async Task AddAsync(T entity)
+        {
+            await _set.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
 
-        public void Update(T entity) => _set.Update(entity);
+        public async Task UpdateAsync(T entity)
+        {
+            _set.Update(entity);
+            await _context.SaveChangesAsync();
+        }
 
-        public void Delete(T entity) => _set.Remove(entity);
-
-        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+        public async Task DeleteAsync(T entity)
+        {
+            _set.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

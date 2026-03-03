@@ -1,5 +1,5 @@
 ﻿using MyAcademy_JWT.Data.Repositories.SongRepositories;
-using MyAcademy_JWT.Services.PackageServices;
+using MyAcademy_JWT.Services.PackageAccessServices;
 
 namespace MyAcademy_JWT.Services.SongQueryServices
 {

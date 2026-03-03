@@ -18,7 +18,7 @@ namespace MyAcademy_JWT.Services.HistoryServices
         {
             var history = await _historyRepo.GetUserHistoryAsync(userId, take);
 
-            return history.Select(h => new { h.SongId, h.PlayedAtUtc }).ToList();
+            return history.Select(h => new { h.SongId, h.PlayedAt }).ToList();
         }
     }
 }

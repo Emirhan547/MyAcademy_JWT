@@ -10,46 +10,53 @@ using MyAcademy_JWT.Data.Repositories.UserRepositories;
 using MyAcademy_JWT.Data.Repositories.UserSongHistoryRepositories;
 using MyAcademy_JWT.Endpoints;
 using MyAcademy_JWT.Entities;
+using MyAcademy_JWT.Models.MLNetViewModels;
 using MyAcademy_JWT.Options;
 using MyAcademy_JWT.Services;
 using MyAcademy_JWT.Services.AuthServices;
 using MyAcademy_JWT.Services.HistoryServices;
-using MyAcademy_JWT.Services.PackageServices;
+using MyAcademy_JWT.Services.PackageAccessServices;     // ✅ TEK DOĞRU NAMESPACE
 using MyAcademy_JWT.Services.PlayServices;
 using MyAcademy_JWT.Services.RecommendationServices;
 using MyAcademy_JWT.Services.SongQueryServices;
+using MyAcademy_JWT.Services.TokenServices;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddScoped(typeof(IGenericRepository<>),
-                          typeof(GenericRepository<>));
 
-builder.Services.AddScoped<ISongRepository,SongRepository>();
-builder.Services.AddScoped<IPackageAccessService, PackageAccessService>();
-builder.Services.AddScoped<IUserRepository,UserRepository>();
-builder.Services.AddScoped<IRecommendationService, RecommendationService>();
-// repositories
-
-
-builder.Services.AddScoped<IPackageRepository,PackageRepository>();
-builder.Services.AddScoped<IUserSongHistoryRepository,UserSongHistoryRepository>();
-
-// services
-builder.Services.AddScoped<IHistoryService, HistoryService>();
-
-builder.Services.AddScoped<IAuthService,AuthService>();
-builder.Services.AddScoped<IPlayerService,PlayerService>();
-builder.Services.AddScoped<ISongQueryService,SongQueryService>();
+// DbContext
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Sql")));
 
+// Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+// Options
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
-builder.Services.AddScoped<TokenService>();
 
+// Repositories
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ISongRepository, SongRepository>();
+builder.Services.AddScoped<IUserSongHistoryRepository, UserSongHistoryRepository>();
+builder.Services.AddScoped<IPackageRepository, PackageRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IHistoryService, HistoryService>();
+builder.Services.AddScoped<IPackageAccessService, PackageAccessService>(); // ✅
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<ISongQueryService, SongQueryService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+
+// ML
+builder.Services.AddSingleton<MLModelState>();
+builder.Services.AddHostedService<RecommendationBackgroundService>();
+
+// Auth (JWT Cookie)
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,7 +76,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Key"]!))
     };
 
-    // 🔥 JWT'yi cookie'den oku
+    // ✅ JWT'yi cookie'den oku
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = ctx =>
@@ -81,35 +88,35 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+// MVC route
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Default}/{action=Index}/{id?}");
+
+// Minimal API endpoints
 app.MapAuthEndpoints();
-app.MapPingEndpoints(); // varsa kalsın
+app.MapPingEndpoints();
 app.MapSongEndpoints();
 app.MapPlayerEndpoints();
 app.MapHistoryEndpoints();
 app.MapRecommendationEndpoints();
+
 app.Run();

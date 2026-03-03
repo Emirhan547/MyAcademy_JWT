@@ -24,5 +24,14 @@ namespace MyAcademy_JWT.Data.Repositories.SongRepositories
                 .OrderBy(s => s.Title)
                 .ToListAsync();
         }
+        public async Task<List<Song>> GetAllWithArtistAsync()
+        {
+            return await _context.Songs
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .AsNoTracking()
+                .OrderBy(s => s.Title)
+                .ToListAsync();
+        }
     }
 }

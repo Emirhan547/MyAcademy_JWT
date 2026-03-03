@@ -1,7 +1,7 @@
 ﻿using MyAcademy_JWT.Data.Repositories.SongRepositories;
 using MyAcademy_JWT.Data.Repositories.UserSongHistoryRepositories;
 using MyAcademy_JWT.Entities;
-using MyAcademy_JWT.Services.PackageServices;
+using MyAcademy_JWT.Services.PackageAccessServices; 
 
 namespace MyAcademy_JWT.Services.PlayServices
 {
@@ -21,30 +21,34 @@ namespace MyAcademy_JWT.Services.PlayServices
             _historyRepository = historyRepository;
         }
 
-        public async Task<(bool ok, string? error, string? filePath)> PrepareStreamAsync(string userId, int songId, string webRootPath)
+        public async Task<(bool ok, string? error, string? filePath)>
+ PrepareStreamAsync(string userId, int songId, string webRootPath)
         {
-            var canAccess = await _accessService.CanAccessSongAsync(userId, songId);
-            if (!canAccess) return (false, "Forbidden", null);
-
             var song = await _songRepository.GetByIdAsync(songId);
-            if (song == null) return (false, "Song not found", null);
+            if (song == null)
+                return (false, "Song not found", null);
 
-            // playcount
+            var canAccess =
+                await _accessService.CanAccessSongAsync(userId, song.ContentLevel);
+
+            if (!canAccess)
+                return (false, "Forbidden", null);
+
+            // 🔥 PlayCount artır
             song.PlayCount++;
-            _songRepository.Update(song);
-            await _songRepository.SaveChangesAsync();
+            await _songRepository.UpdateAsync(song);
 
-            // history
+            // 🔥 History
             await _historyRepository.AddAsync(new UserSongHistory
             {
                 UserId = userId,
                 SongId = song.Id,
-                PlayedAtUtc = DateTime.UtcNow
+                PlayedAt = DateTime.UtcNow
             });
-            await _historyRepository.SaveChangesAsync();
 
             var filePath = Path.Combine(webRootPath, "songs", song.Mp3FileName);
-            if (!File.Exists(filePath)) return (false, "Audio file not found", null);
+            if (!File.Exists(filePath))
+                return (false, "Audio file not found", null);
 
             return (true, null, filePath);
         }

@@ -6,9 +6,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MyAcademy_JWT.Services
+namespace MyAcademy_JWT.Services.TokenServices
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly JwtOptions _opt;
 
